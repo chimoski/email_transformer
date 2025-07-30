@@ -230,35 +230,49 @@ def replace_a_tags(soup):
         for content in new_contents:
             a.append(content)
 
+import re
+from bs4 import BeautifulSoup
+
 def replace_font_family_styles(soup):
     """
-    Replace all font-family styles with Arial, Helvetica, sans-serif.
+    Replace all font-family styles with Arial, Helvetica, sans-serif,
+    avoiding duplicate semicolons or broken CSS syntax.
     """
+    font_declaration = 'font-family: Arial, Helvetica, sans-serif'
+
     # Handle inline style attributes
     for tag in soup.find_all(style=True):
         style = tag['style']
-        # Replace existing font-family declarations
-        new_style = re.sub(
+
+        # Replace any existing font-family declarations
+        updated_style = re.sub(
             r'font-family\s*:\s*[^;]+;?',
-            'font-family: Arial, Helvetica, sans-serif;',
+            font_declaration + ';',
             style,
             flags=re.IGNORECASE
         )
-        # Add font-family if it doesn't exist
-        if 'font-family' not in new_style.lower():
-            new_style = new_style.rstrip(';') + '; font-family: Arial, Helvetica, sans-serif;'
-        tag['style'] = new_style
-    
-    # Handle <style> tags
+
+        # If no font-family was found, append it safely
+        if 'font-family' not in updated_style.lower():
+            updated_style = updated_style.strip()
+            # Ensure a semicolon before appending
+            if not updated_style.endswith(';') and updated_style != '':
+                updated_style += ';'
+            updated_style += ' ' + font_declaration + ';'
+
+        tag['style'] = updated_style.strip()
+
+    # Handle <style> tags with actual CSS code inside
     for style_tag in soup.find_all('style'):
         if style_tag.string:
             new_css = re.sub(
                 r'font-family\s*:\s*[^;]+;?',
-                'font-family: Arial, Helvetica, sans-serif;',
+                font_declaration + ';',
                 style_tag.string,
                 flags=re.IGNORECASE
             )
             style_tag.string.replace_with(new_css)
+
 
 def process_html_content(html_content):
     """
