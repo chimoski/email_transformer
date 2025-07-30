@@ -66,25 +66,21 @@ def ensure_utf8_meta_tag(soup):
 def replace_text_content(soup, tags, placeholder):
     """
     Replace text content in specified tags with placeholder.
-    Only replaces direct text content, not nested elements.
+    If the tag contains only text, replace it. Otherwise, replace only text nodes, preserving inline elements like <br> and <span>.
     """
     for tag in soup.find_all(tags):
-        # Clear existing text content but preserve child elements
-        new_contents = []
-        for content in tag.contents:
-            if isinstance(content, NavigableString) and content.strip():
-                # Clean the text content and replace with placeholder
-                cleaned_text = clean_text_content(content)
-                if cleaned_text:
+        if tag.string and not tag.find(True):
+            tag.string.replace_with(placeholder)
+        else:
+            new_contents = []
+            for content in tag.contents:
+                if isinstance(content, NavigableString) and content.strip():
                     new_contents.append(NavigableString(placeholder))
-            else:
-                # Keep child elements as they are
-                new_contents.append(content)
-        
-        # Clear and rebuild contents
-        tag.clear()
-        for content in new_contents:
-            tag.append(content)
+                else:
+                    new_contents.append(content)
+            tag.clear()
+            for content in new_contents:
+                tag.append(content)
 
 def replace_img_tags(soup):
     """
@@ -278,14 +274,14 @@ def process_html_content(html_content):
     ensure_utf8_meta_tag(soup)
     
     # Apply transformations in order
-    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'div','td'], '{{body_text}}')
+    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], '{{body_text}}')
     replace_text_content(soup, ['h1'], '{{headline}}')
     replace_text_content(soup, ['h2', 'h3', 'h4', 'h5', 'h6'], '{{subheadline}}')
     replace_img_tags(soup)
     replace_a_tags(soup)
     replace_font_family_styles(soup)
     
-    return str(soup)
+    return soup.prettify(formatter="html")
 
 def get_download_link(file_content, filename, text="Download"):
     """

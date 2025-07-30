@@ -51,22 +51,18 @@ def ensure_utf8_meta_tag(soup):
 
 def replace_text_content(soup, tags, placeholder):
     for tag in soup.find_all(tags):
-        # Clear existing text content but preserve child elements
-        new_contents = []
-        for content in tag.contents:
-            if isinstance(content, NavigableString) and content.strip():
-                # Clean the text content and replace with placeholder
-                cleaned_text = clean_text_content(content)
-                if cleaned_text:
+        if tag.string and not tag.find(True):
+            tag.string.replace_with(placeholder)
+        else:
+            new_contents = []
+            for content in tag.contents:
+                if isinstance(content, NavigableString) and content.strip():
                     new_contents.append(NavigableString(placeholder))
-            else:
-                # Keep child elements as they are
-                new_contents.append(content)
-        
-        # Clear and rebuild contents
-        tag.clear()
-        for content in new_contents:
-            tag.append(content)
+                else:
+                    new_contents.append(content)
+            tag.clear()
+            for content in new_contents:
+                tag.append(content)
 
 def replace_img_tags(soup):
     for img in soup.find_all('img'):
@@ -272,16 +268,14 @@ def process_html_file(input_path, output_path):
     ensure_utf8_meta_tag(soup)
     
     # Apply transformations in order
-    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'div'], '{{body_text}}')
-    replace_text_content(soup, ['h1'], '{{headline}}')
-    replace_text_content(soup, ['h2', 'h3', 'h4', 'h5', 'h6'], '{{subheadline}}')
+    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'], '{{body_text}}')
     replace_img_tags(soup)
     replace_a_tags(soup)
     replace_font_family_styles(soup)
     
     # Write the transformed HTML with proper UTF-8 encoding and BOM
     with open(output_path, 'w', encoding='utf-8-sig') as f:
-        f.write(str(soup))
+        f.write(soup.prettify(formatter="html"))
     
     print(f'Successfully processed: {input_path} -> {output_path}')
 
