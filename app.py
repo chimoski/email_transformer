@@ -278,7 +278,7 @@ def process_html_content(html_content):
     ensure_utf8_meta_tag(soup)
     
     # Apply transformations in order
-    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'div'], '{{body_text}}')
+    replace_text_content(soup, ['p', 'li', 'span', 'em', 'strong', 'div','td'], '{{body_text}}')
     replace_text_content(soup, ['h1'], '{{headline}}')
     replace_text_content(soup, ['h2', 'h3', 'h4', 'h5', 'h6'], '{{subheadline}}')
     replace_img_tags(soup)
