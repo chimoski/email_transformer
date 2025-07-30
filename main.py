@@ -3,9 +3,6 @@ import re
 from bs4 import BeautifulSoup, NavigableString
 
 def clean_text_content(text):
-    """
-    Clean text content by removing encoding artifacts and non-breaking spaces.
-    """
     if not text:
         return text
     
@@ -53,10 +50,6 @@ def ensure_utf8_meta_tag(soup):
         head.insert(1, meta_content)
 
 def replace_text_content(soup, tags, placeholder):
-    """
-    Replace text content in specified tags with placeholder.
-    Only replaces direct text content, not nested elements.
-    """
     for tag in soup.find_all(tags):
         # Clear existing text content but preserve child elements
         new_contents = []
@@ -76,10 +69,6 @@ def replace_text_content(soup, tags, placeholder):
             tag.append(content)
 
 def replace_img_tags(soup):
-    """
-    Replace img tag attributes with placeholders and placeholder image URLs.
-    Preserves original image dimensions from various sources.
-    """
     for img in soup.find_all('img'):
         # Extract width and height from multiple sources
         width = None
@@ -358,3 +347,5 @@ Examples:
 
 if __name__ == '__main__':
     main()
+
+    

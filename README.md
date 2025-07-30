@@ -73,7 +73,7 @@ The script performs the following transformations:
   - Inline CSS styles (`width`, `height`, `max-width`, `max-height`, `min-width`, `min-height`)
   - CSS classes and style rules
   - Percentage-based sizing (converted to reasonable pixel values)
-- Replaces `src` with placeholder image URL: `https://dummyimage.com/{width}x{height}/ffffff/000000&text=Image+{width}x{height}`
+- Replaces `src` with placeholder image URL: `https://placehold.jp/ffffff/{width}x{height}.png`
 - Replaces `alt` and `title` attributes with `{{alt_text}}`
 - Preserves original dimensions and applies smart fallbacks for missing sizes
 
@@ -143,7 +143,7 @@ This will process all `.html` files in the `email_templates/` directory and save
 <div class="content">
     <h2>{{subheadline}}</h2>
     <p>{{body_text}} <strong>{{body_text}}</strong>.</p>
-                   <img src="https://dummyimage.com/600x200/ffffff/000000&text=Image+600x200" alt="{{alt_text}}" title="{{alt_text}}" width="600" height="200">
+                                       <img src="https://placehold.jp/ffffff/600x200.png" alt="{{alt_text}}" title="{{alt_text}}" width="600" height="200">
          <a href="{{product_image_url}}">{{body_text}}</a>
 </div>
 ```

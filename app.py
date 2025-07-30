@@ -202,7 +202,7 @@ def replace_img_tags(soup):
             height = '300'
         
         # Replace attributes with a reliable placeholder service
-        img['src'] = f'https://dummyimage.com/{width}x{height}/ffffff/000000&text=Image+{width}x{height}'
+        img['src'] = f'https://placehold.jp/ffffff/{width}x{height}.png'
         img['alt'] = '{{alt_text}}'
         img['title'] = '{{alt_text}}'
         
