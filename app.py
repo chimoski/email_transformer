@@ -213,7 +213,7 @@ def replace_a_tags(soup):
     Replace href attributes in anchor tags and text content.
     """
     for a in soup.find_all('a'):
-        a['href'] = '{{product_image_url}}'
+        a['href'] = '{{product_url}}'
         
         # Replace text content with placeholder
         new_contents = []
