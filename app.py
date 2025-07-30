@@ -365,17 +365,7 @@ def main():
     </div>
     """, unsafe_allow_html=True)
     
-    # Info box
-    st.markdown("""
-    <div class="info-box">
-        <strong>What this tool does:</strong><br>
-        • Replaces text content with placeholders ({{body_text}}, {{headline}}, {{subheadline}})<br>
-        • Converts images to placeholder URLs with correct dimensions<br>
-        • Standardizes font families to Arial, Helvetica, sans-serif<br>
-        • Replaces links with {{product_image_url}} placeholder<br>
-        • Ensures proper UTF-8 encoding
-    </div>
-    """, unsafe_allow_html=True)
+  
     
     # File upload section
     st.markdown('<div class="upload-section">', unsafe_allow_html=True)
@@ -442,19 +432,7 @@ def main():
         st.markdown(download_link, unsafe_allow_html=True)
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Additional info
-        st.markdown("""
-        <div style="margin-top: 2rem; padding: 1rem; background-color: #f8f9fa; border-radius: 5px;">
-            <h4>📋 Available Placeholders:</h4>
-            <ul>
-                <li><code>{{body_text}}</code> - For paragraph, list, span, and div content</li>
-                <li><code>{{headline}}</code> - For H1 headings</li>
-                <li><code>{{subheadline}}</code> - For H2-H6 headings</li>
-                <li><code>{{alt_text}}</code> - For image alt and title attributes</li>
-                <li><code>{{product_image_url}}</code> - For link href attributes</li>
-            </ul>
-        </div>
-        """, unsafe_allow_html=True)
+
 
 if __name__ == "__main__":
     main() 
