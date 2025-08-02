@@ -233,6 +233,36 @@ def replace_a_tags(soup):
 import re
 from bs4 import BeautifulSoup
 
+def replace_background_images(soup):
+    """
+    Replace all background image URLs (both inline styles and internal <style> tags) with link.com
+    """
+
+    # 1. Handle inline style attributes
+    for tag in soup.find_all(style=True):
+        style = tag['style']
+
+        # Replace background-image:url(...) or background:url(...)
+        updated_style = re.sub(
+            r'(background(?:-image)?\s*:\s*url\()[\'"]?[^)\'"]+[\'"]?(\))',
+            r'\1link.com\2',
+            style,
+            flags=re.IGNORECASE
+        )
+
+        tag['style'] = updated_style.strip()
+
+    # 2. Handle <style> tags with internal CSS
+    for style_tag in soup.find_all('style'):
+        if style_tag.string:
+            new_css = re.sub(
+                r'(background(?:-image)?\s*:\s*url\()[\'"]?[^)\'"]+[\'"]?(\))',
+                r'\1link.com\2',
+                style_tag.string,
+                flags=re.IGNORECASE
+            )
+            style_tag.string.replace_with(new_css)
+
 def replace_font_family_styles(soup):
     """
     Replace all font-family styles with Arial, Helvetica, sans-serif,
@@ -294,6 +324,7 @@ def process_html_content(html_content):
     replace_img_tags(soup)
     replace_a_tags(soup)
     replace_font_family_styles(soup)
+    replace_background_images(soup) 
     
     return soup.prettify(formatter="html")
 
